@@ -4,14 +4,35 @@
 <meta charset="utf8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mailing lists | Lovecroft</title>
+<link rel="stylesheet" href="/static/css/paper.css">
+<link rel="stylesheet" href="/static/css/main.css">
 
-<ol>
-    {{ range .Lists }}
-    <li>
-        <div class="list-name">{{ .Name }}</div>
-        <a href="/list/{{ .Name }}">Details</a>
-    </li>
-    {{ end }}
-</ol>
+<main>
+    <form class="addForm">
+        <div class="slot">
+            <label for="add-sub-name">List name</label>
+            <input class="paper paper-border-left" type="text" placeholder="Linus" id="add-sub-given-name">
+        </div>
+
+        <button class="movable accent paper submitButton">Add</button>
+    </form>
+
+    <section class="paper">
+        <ul class="collection">
+            {{ range .Lists }}
+            <li class="item">
+                <div class="left">
+                    <span class="list-count">{{ len .ActiveSubscribers }}/{{ len .Subscribers }}</span>
+                    <span class="list-name">{{ .Name }}</span>
+                </div>
+                <div class="right">
+                    <a class="movable paper" href="/list/{{ .Name }}">See list</a>
+                </div>
+            </li>
+            {{ end }}
+        </ul>
+    </section>
+</main>
+
 
 <script src="/js/main.js"></script>

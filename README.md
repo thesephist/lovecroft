@@ -16,10 +16,6 @@ Lovecroft is a minimal mailing list manager supporting multiple mailing lists. I
 
 ### GET `/unsubscribe/{listName}/{token}`
 
-Query parameters
-
-- `token: string` unsubscribe token
-
 ### GET `/directory`
 
 ### GET `/list/{listName}`

@@ -4,30 +4,62 @@
 <meta charset="utf8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ .Name }} | Lovecroft</title>
+<link rel="stylesheet" href="/static/css/paper.css">
+<link rel="stylesheet" href="/static/css/main.css">
 
-<form class="addSubscriberForm">
-    <label for="add-sub-given-name">Given name</label>
-    <input type="text" id="add-sub-given-name">
-
-    <label for="add-sub-family-name">Family Name</label>
-    <input type="text" id="add-sub-family-name">
-
-    <label for="add-sub-email">Email</label>
-    <input type="email" id="add-sub-email">
-
-    <input type="submit" value="Add">
-</form>
-
-<ol>
-    {{ range .Subscribers }}
-    <li class="{{ if .IsActive }}active{{ else }}inactive{{ end }}">
-        <div class="email">{{ .Email }}</div>
-        <div class="name">
-            <span class="givenName">{{ .GivenName }}</span> <span class="familyName">{{ .FamilyName }}</span>
+<main>
+    <form class="addForm">
+        <div class="slot">
+            <label for="add-sub-given-name">Given name</label>
+            <input class="paper paper-border-left" type="text" placeholder="Linus" id="add-sub-given-name">
         </div>
-        <a href="/unsubscribe/{{ $.Name }}/{{ .UnsubToken }}">Unsubscribe</a>
-    </li>
-    {{ end }}
-</ol>
 
-<script src="/js/main.js"></script>
+        <div class="slot">
+            <label for="add-sub-family-name">Family Name</label>
+            <input class="paper paper-border-left" type="text" placeholder="Lee" id="add-sub-family-name">
+        </div>
+
+        <div class="slot">
+            <label for="add-sub-email">Email</label>
+            <input class="paper paper-border-left" type="email" placeholder="linus@thesephist.com" id="add-sub-email">
+        </div>
+
+        <button class="movable accent paper submitButton">Add</button>
+    </form>
+
+    <section class="paper subscriberListSection showingAll">
+        <div class="right toolbar">
+            <button class="accent movable paper showActives">
+                Show actives
+            </button>
+            <button class="accent movable paper showAll">
+                Show all
+            </button>
+            <div class="paper paper-border-right">
+                {{ len .ActiveSubscribers }}/{{ len .Subscribers }} active
+            </div>
+        </div>
+        <ul class="collection">
+            {{ range .Subscribers }}
+            <li class="item {{ if .IsActive }}active{{ else }}inactive{{ end }}">
+                <div class="left">
+                    <div class="name">
+                        <span class="givenName">{{ .GivenName }}</span> <span
+                            class="familyName">{{ .FamilyName }}</span>
+                    </div>
+                    <div class="email">
+                        <a href="mailto:{{ .Email }}">{{ .Email }}</a>
+                    </div>
+                </div>
+                <div class="right">
+                    <a class="movable paper" href="/unsubscribe/{{ $.Name }}/{{ .UnsubToken }}">
+                        Unsub
+                    </a>
+                </div>
+            </li>
+            {{ end }}
+        </ul>
+    </section>
+</main>
+
+<script src="/static/js/main.js"></script>

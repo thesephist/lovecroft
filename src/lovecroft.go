@@ -17,7 +17,17 @@ func sendError(w http.ResponseWriter, err error) {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "ok")
+	tmpl, err := useTemplate("index")
+	if err != nil {
+		sendError(w, err)
+		return
+	}
+
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		sendError(w, err)
+		return
+	}
 }
 
 func makeSubscribe(ds *DirectoryStore) http.HandlerFunc {
@@ -47,6 +57,10 @@ func makeSubscribe(ds *DirectoryStore) http.HandlerFunc {
 		if err != nil {
 			sendError(w, err)
 		}
+
+		// allow subscriptions to come in from any site
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	}
 }
 
@@ -151,9 +165,11 @@ func start() {
 	r.Methods("POST").Path("/subscribe/{listName}").HandlerFunc(makeSubscribe(store))
 	r.Methods("GET").Path("/unsubscribe/{listName}/{token}").HandlerFunc(makeUnsubscribe(store))
 
-	r.Methods("GET").Path("/directory").HandlerFunc(makeDirectory(store))
-	r.Methods("GET").Path("/list/{listName}").HandlerFunc(makeList(store))
-	r.Methods("GET").Path("/list-csv/{listName}").HandlerFunc(makeListCSV(store))
+	r.Methods("GET").Path("/admin/directory").HandlerFunc(makeDirectory(store))
+	r.Methods("GET").Path("/admin/list/{listName}").HandlerFunc(makeList(store))
+	r.Methods("GET").Path("/admin/list-csv/{listName}").HandlerFunc(makeListCSV(store))
+
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
 	log.Printf("Lovecroft listening on %s\n", srv.Addr)
 	log.Fatal(srv.ListenAndServe())
