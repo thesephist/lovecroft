@@ -1,5 +1,7 @@
 # Lovecroft
 db/
+lovecroft
+lovecroft-*
 
 # Binaries for programs and plugins
 *.exe
