@@ -19,13 +19,13 @@
 </form>
 
 <ol>
-    {{ range .ActiveSubscribers }}
-    <li>
+    {{ range .Subscribers }}
+    <li class="{{ if .IsActive }}active{{ else }}inactive{{ end }}">
         <div class="email">{{ .Email }}</div>
         <div class="name">
             <span class="givenName">{{ .GivenName }}</span> <span class="familyName">{{ .FamilyName }}</span>
         </div>
-        <a href="{{ .UnsubPath }}">Unsubscribe</a>
+        <a href="/unsubscribe/{{ $.Name }}/{{ .UnsubToken }}">Unsubscribe</a>
     </li>
     {{ end }}
 </ol>

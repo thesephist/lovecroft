@@ -4,7 +4,7 @@ Lovecroft is a minimal mailing list manager supporting multiple mailing lists. I
 
 ## API
 
-### POST `/subscribe`
+### POST `/subscribe/{listName}`
 
 ```ts
 {
@@ -14,7 +14,7 @@ Lovecroft is a minimal mailing list manager supporting multiple mailing lists. I
 }
 ```
 
-### GET `/unsubscribe`
+### GET `/unsubscribe/{listName}/{token}`
 
 Query parameters
 

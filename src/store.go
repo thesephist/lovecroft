@@ -17,20 +17,7 @@ type DirectoryStore struct {
 	directory Directory
 }
 
-func (ds *DirectoryStore) StartSubscribe(list List, scriber Subscriber) {
-	scriber.StartDate = time.Now()
-	list.Subscribers = append(list.Subscribers, scriber)
-}
-
-func (ds *DirectoryStore) EndSubscribe(list List, scriber Subscriber) {
-	if !scriber.IsActive() {
-		return
-	}
-
-	scriber.EndDate = time.Now()
-}
-
-func (ds *DirectoryStore) InstantiateDirectory() *Directory {
+func (ds *DirectoryStore) InstantiateDirectory() {
 	err := os.MkdirAll(ds.root, 0755)
 	if err != nil {
 		panic("DirectoryStore.EnsureExists: " + err.Error())
@@ -60,13 +47,6 @@ func (ds *DirectoryStore) InstantiateDirectory() *Directory {
 
 		scribers := []Subscriber{}
 		reader := csv.NewReader(file)
-		_, err = reader.Read() // first line, pass
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			panic("Error reading database CSV: " + err.Error())
-		}
-
 		for {
 			line, err := reader.Read()
 			if err == io.EOF {
@@ -75,23 +55,22 @@ func (ds *DirectoryStore) InstantiateDirectory() *Directory {
 				panic("Error reading database CSV: " + err.Error())
 			}
 
-			startDate, err := time.Parse(time.RFC3339, line[4])
+			startDate, err := time.Parse(time.RFC3339, line[3])
 			if err != nil {
 				panic(fmt.Sprintf("Error reading database %s: %s", name, err.Error()))
 			}
-			endDate, err := time.Parse(time.RFC3339, line[5])
+			endDate, err := time.Parse(time.RFC3339, line[4])
 			if err != nil {
 				panic(fmt.Sprintf("Error reading database %s: %s", name, err.Error()))
 			}
 
 			scribers = append(scribers, Subscriber{
-				ID:         line[0],
+				Email:      line[0],
 				GivenName:  line[1],
 				FamilyName: line[2],
 				StartDate:  startDate,
 				EndDate:    endDate,
-				email:      line[3],
-				unsubToken: line[6],
+				UnsubToken: line[5],
 			})
 		}
 
@@ -105,14 +84,12 @@ func (ds *DirectoryStore) InstantiateDirectory() *Directory {
 	for _, list := range ds.directory.Lists {
 		log.Printf("\t%s - %d actives\n", list.Name, len(list.ActiveSubscribers()))
 	}
-
-	return &ds.directory
 }
 
 func (ds *DirectoryStore) Commit() error {
 	for _, list := range ds.directory.Lists {
 		file, err := os.OpenFile(
-			fmt.Sprintf("%s.csv", list.Name),
+			filepath.Join(ds.root, fmt.Sprintf("%s.csv", list.Name)),
 			os.O_CREATE|os.O_TRUNC|os.O_WRONLY,
 			0644,
 		)
