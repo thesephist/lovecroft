@@ -21,6 +21,10 @@ section {
     margin-bottom: 1em;
 }
 
+input.invalid {
+    border: 2px solid var(--paper-accent);
+}
+
 .addForm {
     display: flex;
     flex-direction: row;

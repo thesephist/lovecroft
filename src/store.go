@@ -82,7 +82,8 @@ func (ds *DirectoryStore) InstantiateDirectory() {
 
 	log.Printf("Directory initialized with %d lists:\n", len(ds.directory.Lists))
 	for _, list := range ds.directory.Lists {
-		log.Printf("\t%s - %d actives\n", list.Name, len(list.ActiveSubscribers()))
+		log.Printf("\t%s - %d/%d actives\n",
+			list.Name, len(list.ActiveSubscribers()), len(list.Subscribers))
 	}
 }
 

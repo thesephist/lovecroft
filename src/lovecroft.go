@@ -87,6 +87,29 @@ func makeUnsubscribe(ds *DirectoryStore) http.HandlerFunc {
 	}
 }
 
+func makeCreateList(ds *DirectoryStore) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		listName := vars["listName"]
+		for _, list := range ds.directory.Lists {
+			if list.Name == listName {
+				w.WriteHeader(http.StatusConflict)
+				return
+			}
+		}
+
+		ds.directory.Lists = append(ds.directory.Lists, List{
+			Name:        listName,
+			Subscribers: []Subscriber{},
+		})
+
+		err := ds.Commit()
+		if err != nil {
+			sendError(w, err)
+		}
+	}
+}
+
 func makeDirectory(ds *DirectoryStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		tmpl, err := useTemplate("directory")
@@ -166,9 +189,12 @@ func start() {
 
 	r.HandleFunc("/", index)
 
+	// public paths
 	r.Methods("POST").Path("/subscribe/{listName}").HandlerFunc(makeSubscribe(store))
 	r.Methods("GET").Path("/unsubscribe/{listName}/{token}").HandlerFunc(makeUnsubscribe(store))
 
+	// admin paths
+	r.Methods("POST").Path("/admin/create-list/{listName}").HandlerFunc(makeCreateList(store))
 	r.Methods("GET").Path("/admin/directory").HandlerFunc(makeDirectory(store))
 	r.Methods("GET").Path("/admin/list/{listName}").HandlerFunc(makeList(store))
 	r.Methods("GET").Path("/admin/list-csv/{listName}").HandlerFunc(makeListCSV(store))
