@@ -29,6 +29,9 @@
 
     <section class="paper subscriberListSection showingAll">
         <div class="right toolbar">
+            <a href="/admin/directory" class="movable paper directoryButton">
+                &larr; Directory
+            </a>
             <button class="accent movable paper showActives">
                 Show actives
             </button>
@@ -52,7 +55,7 @@
                     </div>
                 </div>
                 <div class="right">
-                    <a class="movable paper" href="/unsubscribe/{{ $.Name }}/{{ .UnsubToken }}">
+                    <a class="movable paper" target="_blank" href="/unsubscribe/{{ $.Name }}/{{ .UnsubToken }}">
                         Unsub
                     </a>
                 </div>
@@ -62,4 +65,4 @@
     </section>
 </main>
 
-<script src="/static/js/main.js"></script>
+<script src="/static/js/list.js" type="module"></script>

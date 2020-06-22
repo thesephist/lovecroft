@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -13,6 +14,7 @@ import (
 
 func sendError(w http.ResponseWriter, err error) {
 	log.Println(err.Error())
+	w.WriteHeader(http.StatusInternalServerError)
 	io.WriteString(w, err.Error())
 }
 
@@ -154,7 +156,9 @@ func start() {
 
 	r.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			log.Println(r.Method, r.RequestURI)
+			if !strings.HasPrefix(r.RequestURI, "/static") {
+				log.Println(r.Method, r.RequestURI)
+			}
 
 			next.ServeHTTP(w, r)
 		})

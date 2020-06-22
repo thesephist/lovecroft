@@ -60,7 +60,8 @@ section {
 }
 
 .showingAll .showAll,
-.showingActives .showActives {
+.showingActives .showActives,
+.showingActives .inactive {
     display: none;
 }
 
