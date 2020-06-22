@@ -1,0 +1,2 @@
+# lovecroft
+Mailing list manager
