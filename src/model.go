@@ -53,12 +53,21 @@ func (list *List) Unsubscribe(token string) error {
 	for i, existing := range list.Subscribers {
 		if existing.UnsubToken == token {
 			list.Subscribers[i].EndDate = time.Now()
-			list.Subscribers[i].UnsubToken = newUnsubToken()
 			return nil
 		}
 	}
 
 	return notFoundError{subject: "Subscriber"}
+}
+
+func (list List) SubscriberFromToken(token string) (Subscriber, error) {
+	for _, existing := range list.Subscribers {
+		if existing.UnsubToken == token {
+			return existing, nil
+		}
+	}
+
+	return Subscriber{}, notFoundError{subject: "Subscriber"}
 }
 
 func (list List) ActiveSubscribers() (scribers []Subscriber) {

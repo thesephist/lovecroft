@@ -58,6 +58,7 @@ func makeSubscribe(ds *DirectoryStore) http.HandlerFunc {
 		err = ds.Commit()
 		if err != nil {
 			sendError(w, err)
+			return
 		}
 
 		// allow subscriptions to come in from any site
@@ -83,6 +84,25 @@ func makeUnsubscribe(ds *DirectoryStore) http.HandlerFunc {
 		err = ds.Commit()
 		if err != nil {
 			sendError(w, err)
+			return
+		}
+
+		tmpl, err := useTemplate("unsubscribe")
+		if err != nil {
+			sendError(w, err)
+			return
+		}
+
+		scriber, err := list.SubscriberFromToken(vars["token"])
+		if err != nil {
+			sendError(w, err)
+			return
+		}
+
+		err = tmpl.Execute(w, scriber)
+		if err != nil {
+			sendError(w, err)
+			return
 		}
 	}
 }
@@ -106,6 +126,7 @@ func makeCreateList(ds *DirectoryStore) http.HandlerFunc {
 		err := ds.Commit()
 		if err != nil {
 			sendError(w, err)
+			return
 		}
 	}
 }

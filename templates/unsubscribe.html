@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html lang="en">
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unsubscribing {{ .Name }} | Lovecroft</title>
+<link rel="stylesheet" href="/static/css/paper.css">
+<link rel="stylesheet" href="/static/css/main.css">
+
+<main>
+    <section class="accent paper">
+        <h1>You've been unsubscribed.</h1>
+    </section>
+
+    <section class="paper">
+        <p>
+            Thanks for letting us know, {{ .GivenName }}.
+        </p>
+        <p>
+            We're sorry to see you go, but you won't receive any more emails to {{ .Email }}.
+        </p>
+    </section>
+
+    <footer>
+        <p>
+            Mailing list powered by <a target="_blank" href="https://github.com/thesephist/lovecroft">Lovecroft</a>.
+        </p>
+    </footer>
+</main>
