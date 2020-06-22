@@ -1,0 +1,33 @@
+<!doctype html>
+
+<html lang="en">
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ .Name }} | Lovecroft</title>
+
+<form class="addSubscriberForm">
+    <label for="add-sub-given-name">Given name</label>
+    <input type="text" id="add-sub-given-name">
+
+    <label for="add-sub-family-name">Family Name</label>
+    <input type="text" id="add-sub-family-name">
+
+    <label for="add-sub-email">Email</label>
+    <input type="email" id="add-sub-email">
+
+    <input type="submit" value="Add">
+</form>
+
+<ol>
+    {{ range .ActiveSubscribers }}
+    <li>
+        <div class="email">{{ .Email }}</div>
+        <div class="name">
+            <span class="givenName">{{ .GivenName }}</span> <span class="familyName">{{ .FamilyName }}</span>
+        </div>
+        <a href="{{ .UnsubPath }}">Unsubscribe</a>
+    </li>
+    {{ end }}
+</ol>
+
+<script src="/js/main.js"></script>

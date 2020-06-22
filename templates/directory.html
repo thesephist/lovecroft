@@ -1,0 +1,17 @@
+<!doctype html>
+
+<html lang="en">
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mailing lists | Lovecroft</title>
+
+<ol>
+    {{ range .Lists }}
+    <li>
+        <div class="list-name">{{ .Name }}</div>
+        <a href="/list/{{ .Name }}">Details</a>
+    </li>
+    {{ end }}
+</ol>
+
+<script src="/js/main.js"></script>

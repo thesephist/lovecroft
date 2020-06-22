@@ -1,4 +1,4 @@
-lovecroft = ./src/lovecroft.go
+lovecroft = ./src/
 
 all: run
 
