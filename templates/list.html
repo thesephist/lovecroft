@@ -38,6 +38,12 @@
             <button class="accent movable paper showAll">
                 Show all
             </button>
+            <a class="movable paper showActives" href="/admin/list-csv/{{ .Name }}.csv" download>
+                Download
+            </a>
+            <a class="movable paper showAll" href="/admin/list-active-csv/{{ .Name }}.csv" download>
+                Download
+            </a>
             <div class="paper paper-border-right">
                 {{ len .ActiveSubscribers }}/{{ len .Subscribers }} active
             </div>

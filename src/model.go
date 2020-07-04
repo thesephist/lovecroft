@@ -98,6 +98,25 @@ func (list List) RenderToCSV() string {
 	return strings.Join(rows, "\n")
 }
 
+func (list List) RenderActivesToCSV() string {
+	rows := []string{}
+	for _, scriber := range list.ActiveSubscribers() {
+		items := []string{
+			scriber.Email,
+			scriber.GivenName,
+			scriber.FamilyName,
+			scriber.StartDate.Format(time.RFC3339),
+			scriber.EndDate.Format(time.RFC3339),
+			scriber.UnsubToken,
+		}
+		for i, it := range items {
+			items[i] = "\"" + it + "\""
+		}
+		rows = append(rows, strings.Join(items, ","))
+	}
+	return strings.Join(rows, "\n")
+}
+
 type Directory struct {
 	Lists []List
 }

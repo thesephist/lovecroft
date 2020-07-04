@@ -183,6 +183,19 @@ func makeListCSV(ds *DirectoryStore) http.HandlerFunc {
 	}
 }
 
+func makeListActiveCSV(ds *DirectoryStore) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		list, err := ds.directory.FindList(vars["listName"])
+		if err != nil {
+			sendError(w, err)
+			return
+		}
+
+		io.WriteString(w, list.RenderActivesToCSV())
+	}
+}
+
 func start() {
 	store := &DirectoryStore{
 		root: "./db/",
@@ -218,7 +231,8 @@ func start() {
 	r.Methods("POST").Path("/admin/create-list/{listName}").HandlerFunc(makeCreateList(store))
 	r.Methods("GET").Path("/admin/directory").HandlerFunc(makeDirectory(store))
 	r.Methods("GET").Path("/admin/list/{listName}").HandlerFunc(makeList(store))
-	r.Methods("GET").Path("/admin/list-csv/{listName}").HandlerFunc(makeListCSV(store))
+	r.Methods("GET").Path("/admin/list-csv/{listName}.csv").HandlerFunc(makeListCSV(store))
+	r.Methods("GET").Path("/admin/list-active-csv/{listName}.csv").HandlerFunc(makeListActiveCSV(store))
 
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
