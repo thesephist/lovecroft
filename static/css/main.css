@@ -19,6 +19,10 @@ select {
     font-size: 1em;
 }
 
+select {
+    -webkit-appearance: none;
+}
+
 textarea {
     resize: vertical;
     min-height: 10em;
@@ -126,6 +130,7 @@ li.item:last-child {
 }
 
 .right .paper {
+    margin-right: 0;
     margin-left: 1em;
 }
 
@@ -153,6 +158,10 @@ a {
 .list-count {
     color: #999;
     margin-right: .5em;
+}
+
+.directoryButton {
+    white-space: nowrap;
 }
 
 footer {
