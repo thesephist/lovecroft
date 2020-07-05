@@ -147,6 +147,22 @@ func makeDirectory(ds *DirectoryStore) http.HandlerFunc {
 	}
 }
 
+func makeAuthor(ds *DirectoryStore) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tmpl, err := useTemplate("author")
+		if err != nil {
+			sendError(w, err)
+			return
+		}
+
+		err = tmpl.Execute(w, ds.directory)
+		if err != nil {
+			sendError(w, err)
+			return
+		}
+	}
+}
+
 func makeList(ds *DirectoryStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		tmpl, err := useTemplate("list")
@@ -167,6 +183,32 @@ func makeList(ds *DirectoryStore) http.HandlerFunc {
 			sendError(w, err)
 			return
 		}
+	}
+}
+
+func makeSend(ds *DirectoryStore) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		list, err := ds.directory.FindList(vars["listName"])
+		if err != nil {
+			sendError(w, err)
+			return
+		}
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			sendError(w, err)
+			return
+		}
+
+		issue := Issue{}
+		err = json.Unmarshal(body, &issue)
+		if err != nil {
+			sendError(w, err)
+			return
+		}
+
+		go list.Send(issue)
 	}
 }
 
@@ -230,9 +272,11 @@ func start() {
 	// admin paths
 	r.Methods("POST").Path("/admin/create-list/{listName}").HandlerFunc(makeCreateList(store))
 	r.Methods("GET").Path("/admin/directory").HandlerFunc(makeDirectory(store))
+	r.Methods("GET").Path("/admin/author").HandlerFunc(makeAuthor(store))
 	r.Methods("GET").Path("/admin/list/{listName}").HandlerFunc(makeList(store))
 	r.Methods("GET").Path("/admin/list-csv/{listName}.csv").HandlerFunc(makeListCSV(store))
 	r.Methods("GET").Path("/admin/list-active-csv/{listName}.csv").HandlerFunc(makeListActiveCSV(store))
+	r.Methods("POST").Path("/admin/send/{listName}").HandlerFunc(makeSend(store))
 
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 

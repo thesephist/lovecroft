@@ -1,0 +1,51 @@
+<!doctype html>
+
+<html lang="en">
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Author | Lovecroft</title>
+<link rel="stylesheet" href="/static/css/paper.css">
+<link rel="stylesheet" href="/static/css/main.css">
+
+<main>
+    <form class="sendForm">
+        <div class="slot">
+            <label for="issue-from">From</label>
+            <input class="paper paper-border-left" type="text" placeholder="Linus Lee &lt;linus@thesephist.com&gt;"
+                id="issue-from">
+        </div>
+
+        <div class="slot">
+            <label for="issue-list">List</label>
+            <select name="issue-list" id="issue-list" class="paper paper-border-left">
+                {{ range .Lists }}
+                <option value="{{ .Name }}">
+                    {{ .Name }}
+                    ({{ len .ActiveSubscribers }}/{{ len .Subscribers }} active)
+                </option>
+                {{ end }}
+            </select>
+        </div>
+
+        <div class="slot">
+            <label for="issue-subject">Subject</label>
+            <input class="paper paper-border-left" type="text" placeholder="Updates from Linus..." id="issue-subject">
+        </div>
+
+        <button class="movable accent paper submitButton">Send</button>
+
+        <div class="slot">
+            <label for="issue-body">Body</label>
+            <textarea name="issue-body" id="issue-body" cols="30" rows="42" class="paper paper-border-left"
+                placeholder="Hi, ..."></textarea>
+        </div>
+    </form>
+
+    <footer>
+        <p>
+            Mailing list powered by <a target="_blank" href="https://github.com/thesephist/lovecroft">Lovecroft</a>.
+        </p>
+    </footer>
+</main>
+
+<script src="/static/js/issue.js"></script>

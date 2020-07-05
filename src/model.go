@@ -26,6 +26,7 @@ func (s Subscriber) IsActive() bool {
 }
 
 type List struct {
+	// when sending with Mailgun, Name should be the domain name
 	Name        string
 	Subscribers []Subscriber
 }

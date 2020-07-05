@@ -30,7 +30,7 @@
     <section class="paper subscriberListSection showingAll">
         <div class="right toolbar">
             <a href="/admin/directory" class="movable paper directoryButton">
-                &larr; Directory
+                &larr; <span class="desktop">Directory</span>
             </a>
             <button class="accent movable paper showActives">
                 Show actives
@@ -39,10 +39,10 @@
                 Show all
             </button>
             <a class="movable paper showActives" href="/admin/list-csv/{{ .Name }}.csv" download>
-                Download
+                CSV
             </a>
             <a class="movable paper showAll" href="/admin/list-active-csv/{{ .Name }}.csv" download>
-                Download
+                CSV
             </a>
             <div class="paper paper-border-right">
                 {{ len .ActiveSubscribers }}/{{ len .Subscribers }} active
