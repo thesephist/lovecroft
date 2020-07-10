@@ -86,8 +86,8 @@ func (list List) Send(issue Issue) {
 				issue.Subject, scriber.Email, resp, id)
 		}
 
-		// reasonable rate limit -- this is 600 emails per minute.
+		// reasonable rate limit -- this is 120 emails per minute.
 		// which is enough for me but not too high to be dangerous
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(500 * time.Millisecond)
 	}
 }
